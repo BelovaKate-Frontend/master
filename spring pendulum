@@ -1,0 +1,188 @@
+<html lang="ru">
+<head>
+<meta charset="cp1251" />
+<title>DOC</title>
+</head>
+<body>
+<table border="1">
+<tr valign="top">
+<td rowspan="3" width= 800px; height=600px;><h1>Animation:</h1>
+<canvas id="canvas" width="400" height="600"></canvas>  
+<input type="button" id="button" onclick="updateBtn()" value="start"/>
+</td> 
+</tr>
+
+<tr><td width= 600px; height=300px;> 
+<H1>Please enter parameters:</H1> 
+<B>weight cargo(kg):</B>
+<input id="weight" name="weight" size=10>
+<input type="button" onclick="WeightIncrease()" value="+"/>
+<input type="button" onclick="WeightDecrease()" value="-"/></br>
+
+<B>constant spring(H/m):</B>
+<input id="spring" name="spring" size=10>
+<input type="button" onclick="SpringIncrease()" value="+"/>
+<input type="button" onclick="SpringDecrease()" value="-"/></br>
+
+<B>deviation from equilibrium(down,cm):</B>
+<input id="equilibrium" name="equilibrium" size=10>
+<input type="button" onclick="EquilibriumIncrease()" value="+"/>
+<input type="button" onclick="EquilibriumDecrease()" value="-"/>
+</td>
+</tr>
+
+<tr><td width=600px; height=300px;><h1>Characters:</h1>
+<B>cyclic frequency of natural oscillations:</B>
+<input id="cyclic" name="cyclic" size=5></br>
+<B>time oscillation(sec):</B>
+<input id="time" name="time" size=5></br>
+<B>number of full oscillation:</B>
+<input id="number" name="number" size=5></br>
+<B>coordinate X(cm):</B>
+<input id="coordinate" size=5>
+</td>
+</tr>
+</table>
+
+<script>
+document.getElementById("time").value='';
+document.getElementById("number").value='';
+document.getElementById("coordinate").value ='';
+document.getElementById("weight").value=+0.5;//значения по умолчанию
+document.getElementById("spring").value=+5;
+document.getElementById("equilibrium").value=+10;
+var radius=(Math.cbrt(+document.getElementById("weight").value)/2)*100;//вычисление радиуса
+
+function drawAnimation(high) {//отрисовка анимации
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.lineTo(0, 0);
+  ctx.lineTo(350, 0);//гориз.линия
+  ctx.stroke();
+  var y=+(document.getElementById("equilibrium").value);
+  var x0=+(document.getElementById("equilibrium").value);
+  var s=(high+x0-radius-y)/7;
+  ctx.beginPath();
+  ctx.lineTo(200, 0);
+  ctx.lineTo(180, y += s);//спираль один
+  ctx.stroke();
+  ctx.lineTo(180, y += s);
+  ctx.lineTo(220, y += s);//спираль два
+  ctx.stroke();
+  ctx.lineTo(220, y += s);
+  ctx.lineTo(180, y += s);//спираль три
+  ctx.stroke();
+  ctx.lineTo(180, y += s);
+  ctx.lineTo(200, y += s);//спираль четыре
+  ctx.stroke();
+  ctx.beginPath();//шар
+  ctx.arc(200, y += radius, radius, 0, 2*Math.PI);
+  ctx.stroke();
+}
+drawAnimation(150);
+
+var timer;
+var gy;
+
+function updateBtn() {
+  var button=document.getElementById('button');
+  var t=0;
+  var weight= +(document.getElementById("weight").value);
+  var spring= +(document.getElementById("spring").value);
+  var cyclic=+(document.getElementById("cyclic").value=Math.sqrt(spring/weight));
+    if(button.value==='start') {
+        var start = Date.now();
+        timer=setInterval(function() {
+                           var delta = Date.now() - start;//таймер
+                           t += 0.02;
+                           var x0=+(document.getElementById("equilibrium").value);
+                           var w=x0 * Math.cos(t * cyclic);
+                           document.getElementById("coordinate").value = w;
+                           document.getElementById("time").value=delta/1000;
+                           document.getElementById("number").value=(delta/2000).toFixed(0);
+                           gy=+((w + +document.getElementById("equilibrium").value) * 20);
+                           var canvas = document.getElementById('canvas');
+                           var ctx = canvas.getContext('2d');
+                           ctx.clearRect(0,0,canvas.height,canvas.height);
+                           var y=gy+radius;
+                           drawAnimation(y);
+                           },20, gy);                   
+         button.value='stop';
+         } else {
+           clearInterval(timer);
+           button.value='start';
+           }
+}
+
+function WeightIncrease() {
+	if(document.getElementById("weight").value<1) {
+		var v = +(document.getElementById("weight").value);
+		v = v + +0.1;
+		document.getElementById("weight").value=v.toFixed(1);
+                radius=(Math.cbrt(+document.getElementById("weight").value)/2)*100;
+        	updateCyclic();
+	}//увеличение параметра
+}
+
+function WeightDecrease() {
+	if(+(document.getElementById("weight").value)>0.5) {
+                var a = +(document.getElementById("weight").value);
+		a = a - +0.1;
+		document.getElementById("weight").value=a.toFixed(1);
+                radius=(Math.cbrt(+document.getElementById("weight").value)/2)*100;
+                updateCyclic();
+	}//уменьшение параметра
+}
+
+function SpringIncrease() {
+	if(document.getElementById("spring").value<9) {
+                +(document.getElementById("spring").value++);
+		s = s + +1;
+		document.getElementById("spring").value=s;
+	}
+}
+
+function SpringDecrease() {
+	if(document.getElementById("spring").value>5) {
+                var b = +(document.getElementById("spring").value);
+		b = b - +1;
+		document.getElementById("spring").value=b;
+	}	
+}
+
+function EquilibriumIncrease() {
+	if(document.getElementById("equilibrium").value<20) {
+                var e = +(document.getElementById("equilibrium").value);
+		e = e + +2;
+		document.getElementById("equilibrium").value=e;
+                updateCoord();
+	}	
+}
+
+function EquilibriumDecrease() {
+	if(document.getElementById("equilibrium").value>10) {
+                var c = +(document.getElementById("equilibrium").value);
+		c = c - +2;
+		document.getElementById("equilibrium").value=c;
+                updateCoord();
+        }
+}
+
+var weight= +(document.getElementById("weight").value);
+var spring= +(document.getElementById("spring").value);
+document.getElementById("cyclic").value=spring/weight;
+
+function updateCyclic() {
+  var weight= +(document.getElementById("weight").value);
+  var spring= +(document.getElementById("spring").value);
+  var cyclic=+(document.getElementById("cyclic").value=Math.sqrt(spring/weight));
+}//циклическая частота собственных колебаний
+
+function updateCoord() {
+var equilibrium =+ (document.getElementById("equilibrium").value);
+}//вычисление координат
+
+</script>
+</body>
+</html>
