@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title> тестовое задание </title>
+</head>
+<body>
+<center>
+<button id="button0" onclick="myFunc0()">1</button>
+</br>
+<button id="button1" onclick="myFunc1()">1</button></br>
+<button id="button2" onclick="myFunc2()">2</button></br>
+<button id="button3" onclick="myFunc3()">3</button></br>
+</center>
+
+<script>
+var button0 = document.getElementById("button0");
+var button1 = document.getElementById("button1");
+var button2 = document.getElementById("button2");
+var button3 = document.getElementById("button3");
+
+button1.style.display = "none";
+button2.style.display = "none";
+button3.style.display = "none";
+
+function myFunc0() {
+    button1.style.display = "block";
+    button2.style.display = "block";
+    button3.style.display = "block";
+}
+
+function myFunc1() {
+    button0.innerText = "1";
+    button1.style.display = "none";
+    button2.style.display = "none";
+    button3.style.display = "none";
+}
+
+function myFunc2() {
+    button0.innerText = "2";
+    button1.style.display = "none";
+    button2.style.display = "none";
+    button3.style.display = "none";
+}
+
+function myFunc3() {
+    button0.innerText = "3";
+    button1.style.display = "none";
+    button2.style.display = "none";
+    button3.style.display = "none";
+}
+
+</script>
+</body>
+</html>
